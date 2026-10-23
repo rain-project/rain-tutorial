@@ -1,0 +1,9 @@
+.env
+.git
+.DS_Store
+nodes
+.gitignore
+target
+bin
+code/target
+.devcontainer

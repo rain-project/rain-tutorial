@@ -1,0 +1,8 @@
+.env
+.DS_Store
+/target/
+/code/target/
+/bin/*
+!/bin/.gitkeep
+/nodes/*
+!/nodes/.gitkeep

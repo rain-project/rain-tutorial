@@ -1,0 +1,111 @@
+x-node-common: &node-common
+  image: rain-tutorial-dev
+  entrypoint: []            # sim containers don't need git config
+  volumes:
+    - ./bin:/work/bin:ro
+    - ./nodes/shared:/shared:ro
+
+services:
+  dev:
+    container_name: rain-tutorial-dev
+    build: .
+    env_file: .env
+    volumes:
+      - ./code:/work/code
+      - ./bin:/work/bin
+      - ./nodes:/work/nodes
+    working_dir: /work/code
+    command: sleep infinity
+
+  server0:
+    <<: *node-common
+    container_name: rain-tutorial-server0
+    profiles: [servers]
+    environment:
+      NODE_ID: server0
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server0:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  server1:
+    <<: *node-common
+    container_name: rain-tutorial-server1
+    profiles: [servers]
+    environment:
+      NODE_ID: server1
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server1:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  server2:
+    <<: *node-common
+    container_name: rain-tutorial-server2
+    profiles: [servers]
+    environment:
+      NODE_ID: server2
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server2:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  server3:
+    <<: *node-common
+    container_name: rain-tutorial-server3
+    profiles: [servers]
+    environment:
+      NODE_ID: server3
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server3:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  server4:
+    <<: *node-common
+    container_name: rain-tutorial-server4
+    profiles: [servers]
+    environment:
+      NODE_ID: server4
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server4:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  server5:
+    <<: *node-common
+    container_name: rain-tutorial-server5
+    profiles: [servers]
+    environment:
+      NODE_ID: server5
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+      - ./nodes/server5:/state
+    working_dir: /state
+    command: /work/bin/server
+
+  # Generic client template — instances are spawned via `rain.sh client N`,
+  # which calls `docker compose run` with --name, -e NODE_ID=clientN, and
+  # -v ./nodes/clientN:/state per instance. Each client sees itself via
+  # the NODE_ID env var and its state at /state.
+  client:
+    <<: *node-common
+    profiles: [clients]
+    volumes:
+      - ./bin:/work/bin:ro
+      - ./nodes/shared:/shared:ro
+    working_dir: /state
+    tty: true
+    stdin_open: true
+    command: /work/bin/client
